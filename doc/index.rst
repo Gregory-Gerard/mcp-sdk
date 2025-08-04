@@ -11,7 +11,7 @@ Install the SDK using Composer:
 
 .. code-block:: terminal
 
-    $ composer require symfony/mcp-sdk
+    $ composer require gregory-gerard/mcp-sdk
 
 Usage
 -----

@@ -1,7 +1,7 @@
 {
-    "name": "symfony/mcp-sdk",
+    "name": "gregory-gerard/mcp-sdk",
     "type": "library",
-    "description": "Model Context Protocol SDK for Client and Server applications in PHP",
+    "description": "Model Context Protocol SDK for Client and Server applications in PHP. Backport of symfony/mcp-sdk for PHP 7.4 compatibility.",
     "license": "MIT",
     "authors": [
         {
@@ -11,6 +11,10 @@
         {
             "name": "Tobias Nyholm",
             "email": "tobias.nyholm@gmail.com"
+        },
+        {
+            "name": "Gregory Gerard",
+            "email": "contact@gregory-gerard.dev"
         }
     ],
     "require": {

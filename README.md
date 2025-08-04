@@ -13,7 +13,7 @@ are not covered by Symfony's
 ## Installation
 
 ```bash
-composer require symfony/mcp-sdk
+composer require gregory-gerard/mcp-sdk
 ```
 
 This is a low level SDK that implements the [Model Context Protocol](https://modelcontextprotocol.io/)
