@@ -15,11 +15,16 @@ use Psr\Cache\CacheItemPoolInterface;
 use Symfony\AI\McpSdk\Server\Transport\Sse\StoreInterface;
 use Symfony\Component\Uid\Uuid;
 
-final readonly class CachePoolStore implements StoreInterface
+/**
+ * @readonly
+ */
+final class CachePoolStore implements StoreInterface
 {
-    public function __construct(
-        private CacheItemPoolInterface $cachePool,
-    ) {
+    private CacheItemPoolInterface $cachePool;
+
+    public function __construct(CacheItemPoolInterface $cachePool)
+    {
+        $this->cachePool = $cachePool;
     }
 
     public function push(Uuid $id, string $message): void

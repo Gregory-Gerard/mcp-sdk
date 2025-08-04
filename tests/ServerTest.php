@@ -20,8 +20,10 @@ use Symfony\AI\McpSdk\Server;
 use Symfony\AI\McpSdk\Server\JsonRpcHandler;
 use Symfony\AI\McpSdk\Tests\Fixtures\InMemoryTransport;
 
-#[Small]
-#[CoversClass(Server::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Server
+ */
 class ServerTest extends TestCase
 {
     public function testJsonExceptions()

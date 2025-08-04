@@ -19,21 +19,22 @@ use Symfony\AI\McpSdk\Message\Factory;
 use Symfony\AI\McpSdk\Message\Notification;
 use Symfony\AI\McpSdk\Message\Request;
 
-#[Small]
-#[CoversClass(Factory::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Message\Factory
+ */
 final class FactoryTest extends TestCase
 {
     private Factory $factory;
-
     protected function setUp(): void
     {
         $this->factory = new Factory();
     }
-
     /**
      * @param iterable<mixed> $items
+     * @return mixed
      */
-    private function first(iterable $items): mixed
+    private function first(iterable $items)
     {
         foreach ($items as $item) {
             return $item;
@@ -41,7 +42,6 @@ final class FactoryTest extends TestCase
 
         return null;
     }
-
     public function testCreateRequest()
     {
         $json = '{"jsonrpc": "2.0", "method": "test_method", "params": {"foo": "bar"}, "id": 123}';
@@ -53,7 +53,6 @@ final class FactoryTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $result->params);
         $this->assertSame(123, $result->id);
     }
-
     public function testCreateNotification()
     {
         $json = '{"jsonrpc": "2.0", "method": "notifications/test_event", "params": {"foo": "bar"}}';
@@ -64,26 +63,23 @@ final class FactoryTest extends TestCase
         $this->assertSame('notifications/test_event', $result->method);
         $this->assertSame(['foo' => 'bar'], $result->params);
     }
-
     public function testInvalidJson()
     {
         $this->expectException(\JsonException::class);
 
         $this->first($this->factory->create('invalid json'));
     }
-
     public function testMissingMethod()
     {
         $result = $this->first($this->factory->create('{"jsonrpc": "2.0", "params": {}, "id": 1}'));
         $this->assertInstanceOf(InvalidInputMessageException::class, $result);
         $this->assertEquals('Invalid JSON-RPC request, missing "method".', $result->getMessage());
     }
-
     public function testBatchMissingMethod()
     {
         $results = $this->factory->create('[{"jsonrpc": "2.0", "params": {}, "id": 1}, {"jsonrpc": "2.0", "method": "notifications/test_event", "params": {}, "id": 2}]');
 
-        $results = iterator_to_array($results);
+        $results = iterator_to_array(is_array($results) ? new \ArrayIterator($results) : $results);
         $result = array_shift($results);
         $this->assertInstanceOf(InvalidInputMessageException::class, $result);
         $this->assertEquals('Invalid JSON-RPC request, missing "method".', $result->getMessage());

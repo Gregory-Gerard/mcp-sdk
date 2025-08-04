@@ -16,10 +16,20 @@ use Symfony\AI\McpSdk\Message\Response;
 
 final class InitializeHandler extends BaseRequestHandler
 {
-    public function __construct(
-        private readonly string $name = 'app',
-        private readonly string $version = 'dev',
-    ) {
+    /**
+     * @readonly
+     */
+    private string $name;
+
+    /**
+     * @readonly
+     */
+    private string $version;
+
+    public function __construct(string $name = 'app', string $version = 'dev')
+    {
+        $this->name = $name;
+        $this->version = $version;
     }
 
     public function createResponse(Request $message): Response

@@ -22,7 +22,7 @@ final class Factory
      */
     public function create(string $input): iterable
     {
-        $data = json_decode($input, true, flags: \JSON_THROW_ON_ERROR);
+        $data = json_decode($input, true, 512, \JSON_THROW_ON_ERROR);
 
         if ('{' === $input[0]) {
             $data = [$data];
@@ -31,7 +31,7 @@ final class Factory
         foreach ($data as $message) {
             if (!isset($message['method'])) {
                 yield new InvalidInputMessageException('Invalid JSON-RPC request, missing "method".');
-            } elseif (str_starts_with((string) $message['method'], 'notifications/')) {
+            } elseif (0 === strncmp((string) $message['method'], 'notifications/', \strlen('notifications/'))) {
                 yield Notification::from($message);
             } else {
                 yield Request::from($message);

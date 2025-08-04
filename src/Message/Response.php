@@ -11,15 +11,29 @@
 
 namespace Symfony\AI\McpSdk\Message;
 
-final readonly class Response implements \JsonSerializable
+/**
+ * @readonly
+ */
+final class Response implements \JsonSerializable
 {
     /**
-     * @param array<string, mixed> $result
+     * @var int|string
      */
-    public function __construct(
-        public string|int $id,
-        public array $result = [],
-    ) {
+    public $id;
+
+    /**
+     * @var array<string, mixed>
+     */
+    public array $result;
+
+    /**
+     * @param array<string, mixed> $result
+     * @param string|int           $id
+     */
+    public function __construct($id, array $result = [])
+    {
+        $this->id = $id;
+        $this->result = $result;
     }
 
     /**

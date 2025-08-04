@@ -11,14 +11,23 @@
 
 namespace Symfony\AI\McpSdk\Capability\Prompt;
 
-final readonly class PromptGetResult
+/**
+ * @readonly
+ */
+final class PromptGetResult
 {
+    public string $description;
+    /**
+     * @var list<PromptGetResultMessages>
+     */
+    public array $messages;
+
     /**
      * @param list<PromptGetResultMessages> $messages
      */
-    public function __construct(
-        public string $description,
-        public array $messages = [],
-    ) {
+    public function __construct(string $description, array $messages = [])
+    {
+        $this->description = $description;
+        $this->messages = $messages;
     }
 }

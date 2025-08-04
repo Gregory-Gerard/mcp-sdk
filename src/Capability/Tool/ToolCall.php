@@ -11,15 +11,26 @@
 
 namespace Symfony\AI\McpSdk\Capability\Tool;
 
-final readonly class ToolCall
+/**
+ * @readonly
+ */
+final class ToolCall
 {
+    public string $id;
+    public string $name;
+
+    /**
+     * @var array<string, mixed>
+     */
+    public array $arguments;
+
     /**
      * @param array<string, mixed> $arguments
      */
-    public function __construct(
-        public string $id,
-        public string $name,
-        public array $arguments = [],
-    ) {
+    public function __construct(string $id, string $name, array $arguments = [])
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->arguments = $arguments;
     }
 }

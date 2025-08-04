@@ -11,16 +11,31 @@
 
 namespace Symfony\AI\McpSdk\Message;
 
-final readonly class Request implements \JsonSerializable, \Stringable
+/**
+ * @readonly
+ */
+final class Request implements \JsonSerializable
 {
     /**
-     * @param array<string, mixed>|null $params
+     * @var int|string
      */
-    public function __construct(
-        public int|string $id,
-        public string $method,
-        public ?array $params = null,
-    ) {
+    public $id;
+    public string $method;
+
+    /**
+     * @var array<string, mixed>|null
+     */
+    public ?array $params;
+
+    /**
+     * @param array<string, mixed>|null $params
+     * @param int|string                $id
+     */
+    public function __construct($id, string $method, ?array $params = null)
+    {
+        $this->id = $id;
+        $this->method = $method;
+        $this->params = $params;
     }
 
     /**

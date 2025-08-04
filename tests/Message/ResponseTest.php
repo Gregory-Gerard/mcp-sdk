@@ -16,8 +16,10 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpSdk\Message\Response;
 
-#[Small]
-#[CoversClass(Response::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Message\Response
+ */
 final class ResponseTest extends TestCase
 {
     public function testWithIntegerId()
@@ -31,7 +33,6 @@ final class ResponseTest extends TestCase
 
         $this->assertSame($expected, $response->jsonSerialize());
     }
-
     public function testWithStringId()
     {
         $response = new Response('abc', ['foo' => 'bar']);

@@ -13,9 +13,15 @@ namespace Symfony\AI\McpSdk\Exception;
 
 final class InvalidCursorException extends \InvalidArgumentException implements ExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public string $cursor;
+
     public function __construct(
-        public readonly string $cursor,
+        string $cursor
     ) {
+        $this->cursor = $cursor;
         parent::__construct(\sprintf('Invalid value for pagination parameter "cursor": "%s"', $cursor));
     }
 }

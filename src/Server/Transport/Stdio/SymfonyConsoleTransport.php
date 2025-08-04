@@ -21,12 +21,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class SymfonyConsoleTransport implements TransportInterface
 {
+    /**
+     * @readonly
+     */
+    private InputInterface $input;
+
+    /**
+     * @readonly
+     */
+    private OutputInterface $output;
     private string $buffer = '';
 
-    public function __construct(
-        private readonly InputInterface $input,
-        private readonly OutputInterface $output,
-    ) {
+    public function __construct(InputInterface $input, OutputInterface $output)
+    {
+        $this->input = $input;
+        $this->output = $output;
     }
 
     public function initialize(): void
@@ -46,7 +55,7 @@ final class SymfonyConsoleTransport implements TransportInterface
             return;
         }
         $this->buffer .= \STDIN === $stream ? rtrim($line).\PHP_EOL : $line;
-        if (str_contains($this->buffer, \PHP_EOL)) {
+        if (false !== strpos($this->buffer, \PHP_EOL)) {
             $lines = explode(\PHP_EOL, $this->buffer);
             $this->buffer = array_pop($lines);
 

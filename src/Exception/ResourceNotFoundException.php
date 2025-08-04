@@ -15,9 +15,15 @@ use Symfony\AI\McpSdk\Capability\Resource\ResourceRead;
 
 final class ResourceNotFoundException extends \RuntimeException implements NotFoundExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public ResourceRead $readRequest;
+
     public function __construct(
-        public readonly ResourceRead $readRequest,
+        ResourceRead $readRequest
     ) {
+        $this->readRequest = $readRequest;
         parent::__construct(\sprintf('Resource not found for uri: "%s"', $readRequest->uri));
     }
 }

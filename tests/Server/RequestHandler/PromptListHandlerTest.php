@@ -19,8 +19,10 @@ use Symfony\AI\McpSdk\Capability\PromptChain;
 use Symfony\AI\McpSdk\Message\Request;
 use Symfony\AI\McpSdk\Server\RequestHandler\PromptListHandler;
 
-#[Small]
-#[CoversClass(PromptListHandler::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Server\RequestHandler\PromptListHandler
+ */
 class PromptListHandlerTest extends TestCase
 {
     public function testHandleEmpty()
@@ -31,7 +33,6 @@ class PromptListHandlerTest extends TestCase
         $this->assertEquals(1, $response->id);
         $this->assertEquals(['prompts' => []], $response->result);
     }
-
     public function testHandleReturnAll()
     {
         $item = self::createMetadataItem();
@@ -41,7 +42,6 @@ class PromptListHandlerTest extends TestCase
         $this->assertCount(1, $response->result['prompts']);
         $this->assertArrayNotHasKey('nextCursor', $response->result);
     }
-
     public function testHandlePagination()
     {
         $item = self::createMetadataItem();
@@ -51,7 +51,6 @@ class PromptListHandlerTest extends TestCase
         $this->assertCount(2, $response->result['prompts']);
         $this->assertArrayHasKey('nextCursor', $response->result);
     }
-
     private static function createMetadataItem(): MetadataInterface
     {
         return new class implements MetadataInterface {

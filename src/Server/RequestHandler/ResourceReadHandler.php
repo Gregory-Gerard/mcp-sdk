@@ -21,12 +21,20 @@ use Symfony\AI\McpSdk\Message\Response;
 
 final class ResourceReadHandler extends BaseRequestHandler
 {
-    public function __construct(
-        private readonly ResourceReaderInterface $reader,
-    ) {
+    /**
+     * @readonly
+     */
+    private ResourceReaderInterface $reader;
+
+    public function __construct(ResourceReaderInterface $reader)
+    {
+        $this->reader = $reader;
     }
 
-    public function createResponse(Request $message): Response|Error
+    /**
+     * @return Response|Error
+     */
+    public function createResponse(Request $message)
     {
         $uri = $message->params['uri'];
 
@@ -34,7 +42,7 @@ final class ResourceReadHandler extends BaseRequestHandler
             $result = $this->reader->read(new ResourceRead(uniqid('', true), $uri));
         } catch (ResourceNotFoundException $e) {
             return new Error($message->id, Error::RESOURCE_NOT_FOUND, $e->getMessage());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
             return Error::internalError($message->id, 'Error while reading resource');
         }
 

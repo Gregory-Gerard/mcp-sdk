@@ -15,14 +15,19 @@ use Symfony\AI\McpSdk\Server\TransportInterface;
 
 class InMemoryTransport implements TransportInterface
 {
+    /**
+     * @var list<string>
+     * @readonly
+     */
+    private array $messages;
     private bool $connected = true;
 
     /**
      * @param list<string> $messages
      */
-    public function __construct(
-        private readonly array $messages = [],
-    ) {
+    public function __construct(array $messages = [])
+    {
+        $this->messages = $messages;
     }
 
     public function initialize(): void

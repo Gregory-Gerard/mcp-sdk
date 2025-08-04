@@ -21,43 +21,58 @@ use Symfony\AI\McpSdk\Message\Response;
 
 final class ToolCallHandler extends BaseRequestHandler
 {
-    public function __construct(
-        private readonly ToolExecutorInterface $toolExecutor,
-    ) {
+    /**
+     * @readonly
+     */
+    private ToolExecutorInterface $toolExecutor;
+
+    public function __construct(ToolExecutorInterface $toolExecutor)
+    {
+        $this->toolExecutor = $toolExecutor;
     }
 
-    public function createResponse(Request $message): Response|Error
+    /**
+     * @return Response|Error
+     */
+    public function createResponse(Request $message)
     {
         $name = $message->params['name'];
         $arguments = $message->params['arguments'] ?? [];
 
         try {
             $result = $this->toolExecutor->call(new ToolCall(uniqid('', true), $name, $arguments));
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
             return Error::internalError($message->id, 'Error while executing tool');
         }
 
-        $content = match ($result->type) {
-            'text' => [
-                'type' => 'text',
-                'text' => $result->result,
-            ],
-            'image', 'audio' => [
-                'type' => $result->type,
-                'data' => $result->result,
-                'mimeType' => $result->mimeType,
-            ],
-            'resource' => [
-                'type' => 'resource',
-                'resource' => [
-                    'uri' => $result->uri,
-                    'mimeType' => $result->mimeType,
+        switch ($result->type) {
+            case 'text':
+                $content = [
+                    'type' => 'text',
                     'text' => $result->result,
-                ],
-            ],
-            // TODO better exception
-            default => throw new InvalidArgumentException('Unsupported tool result type: '.$result->type),
-        };
+                ];
+                break;
+            case 'image':
+            case 'audio':
+                $content = [
+                    'type' => $result->type,
+                    'data' => $result->result,
+                    'mimeType' => $result->mimeType,
+                ];
+                break;
+            case 'resource':
+                $content = [
+                    'type' => 'resource',
+                    'resource' => [
+                        'uri' => $result->uri,
+                        'mimeType' => $result->mimeType,
+                        'text' => $result->result,
+                    ],
+                ];
+                break;
+            default:
+                throw new InvalidArgumentException('Unsupported tool result type: '.$result->type);
+        }
 
         return new Response($message->id, [
             'content' => [$content], // TODO: allow multiple `ToolCallResult`s in the future

@@ -21,45 +21,60 @@ use Symfony\AI\McpSdk\Message\Response;
 
 final class PromptGetHandler extends BaseRequestHandler
 {
-    public function __construct(
-        private readonly PromptGetterInterface $getter,
-    ) {
+    /**
+     * @readonly
+     */
+    private PromptGetterInterface $getter;
+
+    public function __construct(PromptGetterInterface $getter)
+    {
+        $this->getter = $getter;
     }
 
-    public function createResponse(Request $message): Response|Error
+    /**
+     * @return Response|Error
+     */
+    public function createResponse(Request $message)
     {
         $name = $message->params['name'];
         $arguments = $message->params['arguments'] ?? [];
 
         try {
             $result = $this->getter->get(new PromptGet(uniqid('', true), $name, $arguments));
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
             return Error::internalError($message->id, 'Error while handling prompt');
         }
 
         $messages = [];
         foreach ($result->messages as $resultMessage) {
-            $content = match ($resultMessage->type) {
-                'text' => [
-                    'type' => 'text',
-                    'text' => $resultMessage->result,
-                ],
-                'image', 'audio' => [
-                    'type' => $resultMessage->type,
-                    'data' => $resultMessage->result,
-                    'mimeType' => $resultMessage->mimeType,
-                ],
-                'resource' => [
-                    'type' => 'resource',
-                    'resource' => [
-                        'uri' => $resultMessage->uri,
-                        'mimeType' => $resultMessage->mimeType,
+            switch ($resultMessage->type) {
+                case 'text':
+                    $content = [
+                        'type' => 'text',
                         'text' => $resultMessage->result,
-                    ],
-                ],
-                // TODO better exception
-                default => throw new InvalidArgumentException('Unsupported PromptGet result type: '.$resultMessage->type),
-            };
+                    ];
+                    break;
+                case 'image':
+                case 'audio':
+                    $content = [
+                        'type' => $resultMessage->type,
+                        'data' => $resultMessage->result,
+                        'mimeType' => $resultMessage->mimeType,
+                    ];
+                    break;
+                case 'resource':
+                    $content = [
+                        'type' => 'resource',
+                        'resource' => [
+                            'uri' => $resultMessage->uri,
+                            'mimeType' => $resultMessage->mimeType,
+                            'text' => $resultMessage->result,
+                        ],
+                    ];
+                    break;
+                default:
+                    throw new InvalidArgumentException('Unsupported PromptGet result type: '.$resultMessage->type);
+            }
 
             $messages[] = [
                 'role' => $resultMessage->role,

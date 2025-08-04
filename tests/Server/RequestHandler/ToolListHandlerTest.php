@@ -21,8 +21,10 @@ use Symfony\AI\McpSdk\Capability\Tool\ToolAnnotationsInterface;
 use Symfony\AI\McpSdk\Message\Request;
 use Symfony\AI\McpSdk\Server\RequestHandler\ToolListHandler;
 
-#[Small]
-#[CoversClass(ToolListHandler::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Server\RequestHandler\ToolListHandler
+ */
 class ToolListHandlerTest extends TestCase
 {
     public function testHandleEmpty()
@@ -39,11 +41,10 @@ class ToolListHandlerTest extends TestCase
         $this->assertEquals(1, $response->id);
         $this->assertEquals(['tools' => []], $response->result);
     }
-
     /**
      * @param iterable<MetadataInterface> $metadataList
+     * @dataProvider metadataProvider
      */
-    #[DataProvider('metadataProvider')]
     public function testHandleReturnAll(iterable $metadataList)
     {
         $collection = $this->getMockBuilder(CollectionInterface::class)
@@ -57,7 +58,6 @@ class ToolListHandlerTest extends TestCase
         $this->assertCount(1, $response->result['tools']);
         $this->assertArrayNotHasKey('nextCursor', $response->result);
     }
-
     /**
      * @return array<string, iterable<MetadataInterface>>
      */
@@ -70,7 +70,6 @@ class ToolListHandlerTest extends TestCase
             'generator' => [(function () use ($item) { yield $item; })()],
         ];
     }
-
     public function testHandlePagination()
     {
         $item = self::createMetadataItem();
@@ -85,7 +84,6 @@ class ToolListHandlerTest extends TestCase
         $this->assertCount(2, $response->result['tools']);
         $this->assertArrayHasKey('nextCursor', $response->result);
     }
-
     private static function createMetadataItem(): MetadataInterface
     {
         return new class implements MetadataInterface {

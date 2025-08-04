@@ -15,9 +15,15 @@ use Symfony\AI\McpSdk\Capability\Tool\ToolCall;
 
 final class ToolNotFoundException extends \RuntimeException implements NotFoundExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public ToolCall $toolCall;
+
     public function __construct(
-        public readonly ToolCall $toolCall,
+        ToolCall $toolCall
     ) {
+        $this->toolCall = $toolCall;
         parent::__construct(\sprintf('Tool not found for call: "%s"', $toolCall->name));
     }
 }

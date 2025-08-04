@@ -15,9 +15,15 @@ use Symfony\AI\McpSdk\Capability\Prompt\PromptGet;
 
 final class PromptNotFoundException extends \RuntimeException implements NotFoundExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public PromptGet $promptGet;
+
     public function __construct(
-        public readonly PromptGet $promptGet,
+        PromptGet $promptGet
     ) {
+        $this->promptGet = $promptGet;
         parent::__construct(\sprintf('Prompt not found for name: "%s"', $promptGet->name));
     }
 }

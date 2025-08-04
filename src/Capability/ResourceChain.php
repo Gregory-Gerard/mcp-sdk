@@ -26,12 +26,19 @@ use Symfony\AI\McpSdk\Exception\ResourceReadException;
  */
 class ResourceChain implements CollectionInterface, ResourceReaderInterface
 {
-    public function __construct(
-        /**
-         * @var IdentifierInterface[]
-         */
-        private readonly array $items,
-    ) {
+    /**
+     * @var array<IdentifierInterface>
+     *
+     * @readonly
+     */
+    private array $items;
+
+    /**
+     * @param array<IdentifierInterface> $items
+     */
+    public function __construct(array $items)
+    {
+        $this->items = $items;
     }
 
     public function getMetadata(int $count, ?string $lastIdentifier = null): iterable

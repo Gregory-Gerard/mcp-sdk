@@ -20,8 +20,10 @@ use Symfony\AI\McpSdk\Capability\Resource\MetadataInterface;
 use Symfony\AI\McpSdk\Message\Request;
 use Symfony\AI\McpSdk\Server\RequestHandler\ResourceListHandler;
 
-#[Small]
-#[CoversClass(ResourceListHandler::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Server\RequestHandler\ResourceListHandler
+ */
 class ResourceListHandlerTest extends TestCase
 {
     public function testHandleEmpty()
@@ -38,11 +40,10 @@ class ResourceListHandlerTest extends TestCase
         $this->assertEquals(1, $response->id);
         $this->assertEquals(['resources' => []], $response->result);
     }
-
     /**
      * @param iterable<MetadataInterface> $metadataList
+     * @dataProvider metadataProvider
      */
-    #[DataProvider('metadataProvider')]
     public function testHandleReturnAll(iterable $metadataList)
     {
         $collection = $this->getMockBuilder(CollectionInterface::class)
@@ -56,7 +57,6 @@ class ResourceListHandlerTest extends TestCase
         $this->assertCount(1, $response->result['resources']);
         $this->assertArrayNotHasKey('nextCursor', $response->result);
     }
-
     /**
      * @return array<string, iterable<MetadataInterface>>
      */
@@ -69,7 +69,6 @@ class ResourceListHandlerTest extends TestCase
             'generator' => [(function () use ($item) { yield $item; })()],
         ];
     }
-
     public function testHandlePagination()
     {
         $item = self::createMetadataItem();
@@ -84,7 +83,6 @@ class ResourceListHandlerTest extends TestCase
         $this->assertCount(2, $response->result['resources']);
         $this->assertArrayHasKey('nextCursor', $response->result);
     }
-
     private static function createMetadataItem(): MetadataInterface
     {
         return new class implements MetadataInterface {

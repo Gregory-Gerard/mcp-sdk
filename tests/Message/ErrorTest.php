@@ -16,8 +16,10 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpSdk\Message\Error;
 
-#[Small]
-#[CoversClass(Error::class)]
+/**
+ * @small
+ * @covers \Symfony\AI\McpSdk\Message\Error
+ */
 final class ErrorTest extends TestCase
 {
     public function testWithIntegerId()
@@ -34,7 +36,6 @@ final class ErrorTest extends TestCase
 
         $this->assertSame($expected, $error->jsonSerialize());
     }
-
     public function testWithStringId()
     {
         $error = new Error('abc', -32602, 'Another error occurred');

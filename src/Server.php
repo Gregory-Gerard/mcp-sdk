@@ -16,12 +16,19 @@ use Psr\Log\NullLogger;
 use Symfony\AI\McpSdk\Server\JsonRpcHandler;
 use Symfony\AI\McpSdk\Server\TransportInterface;
 
-final readonly class Server
+/**
+ * @readonly
+ */
+final class Server
 {
-    public function __construct(
-        private JsonRpcHandler $jsonRpcHandler,
-        private LoggerInterface $logger = new NullLogger(),
-    ) {
+    private JsonRpcHandler $jsonRpcHandler;
+    private LoggerInterface $logger;
+
+    public function __construct(JsonRpcHandler $jsonRpcHandler, ?LoggerInterface $logger = null)
+    {
+        $logger ??= new NullLogger();
+        $this->jsonRpcHandler = $jsonRpcHandler;
+        $this->logger = $logger;
     }
 
     public function connect(TransportInterface $transport): void

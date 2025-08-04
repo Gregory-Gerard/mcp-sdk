@@ -26,12 +26,19 @@ use Symfony\AI\McpSdk\Exception\ToolNotFoundException;
  */
 class ToolChain implements ToolExecutorInterface, CollectionInterface
 {
-    public function __construct(
-        /**
-         * @var IdentifierInterface[] $items
-         */
-        private readonly iterable $items,
-    ) {
+    /**
+     * @var iterable<IdentifierInterface>
+     *
+     * @readonly
+     */
+    private iterable $items;
+
+    /**
+     * @param iterable<IdentifierInterface> $items
+     */
+    public function __construct(iterable $items)
+    {
+        $this->items = $items;
     }
 
     public function getMetadata(?int $count, ?string $lastIdentifier = null): iterable

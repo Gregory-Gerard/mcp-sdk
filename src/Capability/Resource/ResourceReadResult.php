@@ -11,17 +11,24 @@
 
 namespace Symfony\AI\McpSdk\Capability\Resource;
 
-final readonly class ResourceReadResult
+/**
+ * @readonly
+ */
+final class ResourceReadResult
 {
-    public function __construct(
-        public string $result,
-        public string $uri,
+    public string $result;
+    public string $uri;
+    /**
+     * @var "text"|"blob"
+     */
+    public string $type;
+    public string $mimeType;
 
-        /**
-         * @var "text"|"blob"
-         */
-        public string $type = 'text',
-        public string $mimeType = 'text/plain',
-    ) {
+    public function __construct(string $result, string $uri, string $type = 'text', string $mimeType = 'text/plain')
+    {
+        $this->result = $result;
+        $this->uri = $uri;
+        $this->type = $type;
+        $this->mimeType = $mimeType;
     }
 }

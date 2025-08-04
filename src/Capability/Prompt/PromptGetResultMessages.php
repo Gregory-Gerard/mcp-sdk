@@ -11,17 +11,27 @@
 
 namespace Symfony\AI\McpSdk\Capability\Prompt;
 
-final readonly class PromptGetResultMessages
+/**
+ * @readonly
+ */
+final class PromptGetResultMessages
 {
-    public function __construct(
-        public string $role,
-        public string $result,
-        /**
-         * @var "text"|"image"|"audio"|"resource"|non-empty-string
-         */
-        public string $type = 'text',
-        public string $mimeType = 'text/plan',
-        public ?string $uri = null,
-    ) {
+    public string $role;
+    public string $result;
+
+    /**
+     * @var "text"|"image"|"audio"|"resource"|non-empty-string
+     */
+    public string $type;
+    public string $mimeType;
+    public ?string $uri;
+
+    public function __construct(string $role, string $result, string $type = 'text', string $mimeType = 'text/plan', ?string $uri = null)
+    {
+        $this->role = $role;
+        $this->result = $result;
+        $this->type = $type;
+        $this->mimeType = $mimeType;
+        $this->uri = $uri;
     }
 }

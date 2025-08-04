@@ -15,10 +15,16 @@ use Symfony\AI\McpSdk\Capability\Resource\ResourceRead;
 
 final class ResourceReadException extends \RuntimeException implements ExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public ResourceRead $readRequest;
+
     public function __construct(
-        public readonly ResourceRead $readRequest,
-        ?\Throwable $previous = null,
+        ResourceRead $readRequest,
+        ?\Throwable $previous = null
     ) {
-        parent::__construct(\sprintf('Reading resource "%s" failed with error: %s', $readRequest->uri, $previous?->getMessage() ?? ''), previous: $previous);
+        $this->readRequest = $readRequest;
+        parent::__construct(\sprintf('Reading resource "%s" failed with error: %s', $readRequest->uri, (($nullsafeVariable1 = $previous) ? $nullsafeVariable1->getMessage() : null) ?? ''), 0, $previous);
     }
 }

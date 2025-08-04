@@ -11,15 +11,25 @@
 
 namespace Symfony\AI\McpSdk\Message;
 
-final readonly class Notification implements \JsonSerializable, \Stringable
+/**
+ * @readonly
+ */
+final class Notification implements \JsonSerializable
 {
+    public string $method;
+
+    /**
+     * @var array<string, mixed>|null
+     */
+    public ?array $params;
+
     /**
      * @param array<string, mixed>|null $params
      */
-    public function __construct(
-        public string $method,
-        public ?array $params = null,
-    ) {
+    public function __construct(string $method, ?array $params = null)
+    {
+        $this->method = $method;
+        $this->params = $params;
     }
 
     /**

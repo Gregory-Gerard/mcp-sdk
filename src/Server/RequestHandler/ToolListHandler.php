@@ -17,10 +17,20 @@ use Symfony\AI\McpSdk\Message\Response;
 
 final class ToolListHandler extends BaseRequestHandler
 {
-    public function __construct(
-        private readonly CollectionInterface $collection,
-        private readonly ?int $pageSize = 20,
-    ) {
+    /**
+     * @readonly
+     */
+    private CollectionInterface $collection;
+
+    /**
+     * @readonly
+     */
+    private ?int $pageSize;
+
+    public function __construct(CollectionInterface $collection, ?int $pageSize = 20)
+    {
+        $this->collection = $collection;
+        $this->pageSize = $pageSize;
     }
 
     public function createResponse(Request $message): Response

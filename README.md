@@ -1,5 +1,8 @@
 # Model Context Protocol PHP SDK
 
+> [!IMPORTANT]
+> This is a backport of the Symfony MCP SDK https://github.com/symfony/mcp-sdk for PHP 7.4 compatibility.
+
 Model Context Protocol SDK for Client and Server applications in PHP.
 
 **This Component is experimental**.

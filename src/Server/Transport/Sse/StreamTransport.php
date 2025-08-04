@@ -14,13 +14,20 @@ namespace Symfony\AI\McpSdk\Server\Transport\Sse;
 use Symfony\AI\McpSdk\Server\TransportInterface;
 use Symfony\Component\Uid\Uuid;
 
-final readonly class StreamTransport implements TransportInterface
+/**
+ * @readonly
+ */
+final class StreamTransport implements TransportInterface
 {
-    public function __construct(
-        private string $messageEndpoint,
-        private StoreInterface $store,
-        private Uuid $id,
-    ) {
+    private string $messageEndpoint;
+    private StoreInterface $store;
+    private Uuid $id;
+
+    public function __construct(string $messageEndpoint, StoreInterface $store, Uuid $id)
+    {
+        $this->messageEndpoint = $messageEndpoint;
+        $this->store = $store;
+        $this->id = $id;
     }
 
     public function initialize(): void

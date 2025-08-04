@@ -11,17 +11,27 @@
 
 namespace Symfony\AI\McpSdk\Capability\Tool;
 
-final readonly class ToolCallResult
+/**
+ * @readonly
+ */
+final class ToolCallResult
 {
-    public function __construct(
-        public string $result,
-        /**
-         * @var "text"|"image"|"audio"|"resource"|non-empty-string
-         */
-        public string $type = 'text',
-        public string $mimeType = 'text/plan',
-        public bool $isError = false,
-        public ?string $uri = null,
-    ) {
+    public string $result;
+
+    /**
+     * @var "text"|"image"|"audio"|"resource"|non-empty-string
+     */
+    public string $type;
+    public string $mimeType;
+    public bool $isError;
+    public ?string $uri;
+
+    public function __construct(string $result, string $type = 'text', string $mimeType = 'text/plan', bool $isError = false, ?string $uri = null)
+    {
+        $this->result = $result;
+        $this->type = $type;
+        $this->mimeType = $mimeType;
+        $this->isError = $isError;
+        $this->uri = $uri;
     }
 }

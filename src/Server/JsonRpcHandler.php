@@ -25,9 +25,14 @@ use Symfony\AI\McpSdk\Message\Response;
 
 /**
  * @final
+ *
+ * @readonly
  */
-readonly class JsonRpcHandler
+class JsonRpcHandler
 {
+    private Factory $messageFactory;
+    private LoggerInterface $logger;
+
     /**
      * @var array<int, RequestHandlerInterface>
      */
@@ -43,11 +48,14 @@ readonly class JsonRpcHandler
      * @param iterable<NotificationHandlerInterface> $notificationHandlers
      */
     public function __construct(
-        private Factory $messageFactory,
+        Factory $messageFactory,
         iterable $requestHandlers,
         iterable $notificationHandlers,
-        private LoggerInterface $logger = new NullLogger(),
+        ?LoggerInterface $logger = null
     ) {
+        $logger ??= new NullLogger();
+        $this->messageFactory = $messageFactory;
+        $this->logger = $logger;
         $this->requestHandlers = $requestHandlers instanceof \Traversable ? iterator_to_array($requestHandlers) : $requestHandlers;
         $this->notificationHandlers = $notificationHandlers instanceof \Traversable ? iterator_to_array($notificationHandlers) : $notificationHandlers;
     }
@@ -85,7 +93,7 @@ readonly class JsonRpcHandler
                 yield $message instanceof Notification
                     ? $this->handleNotification($message)
                     : $this->encodeResponse($this->handleRequest($message));
-            } catch (\DomainException) {
+            } catch (\DomainException $exception) {
                 yield null;
             } catch (NotFoundExceptionInterface $e) {
                 $this->logger->warning(\sprintf('Failed to create response: %s', $e->getMessage()), ['exception' => $e]);
@@ -104,9 +112,11 @@ readonly class JsonRpcHandler
     }
 
     /**
+     * @param Response|Error|null $response
+     *
      * @throws \JsonException When JSON encoding fails
      */
-    private function encodeResponse(Response|Error|null $response): ?string
+    private function encodeResponse($response): ?string
     {
         if (null === $response) {
             $this->logger->warning('Response is null');
@@ -124,9 +134,11 @@ readonly class JsonRpcHandler
     }
 
     /**
+     * @return null
+     *
      * @throws ExceptionInterface When a notification handler throws an exception
      */
-    private function handleNotification(Notification $notification): null
+    private function handleNotification(Notification $notification)
     {
         $handled = false;
         foreach ($this->notificationHandlers as $handler) {
@@ -144,10 +156,12 @@ readonly class JsonRpcHandler
     }
 
     /**
+     * @return Response|Error
+     *
      * @throws NotFoundExceptionInterface When no handler is found for the request method
      * @throws ExceptionInterface         When a request handler throws an exception
      */
-    private function handleRequest(Request $request): Response|Error
+    private function handleRequest(Request $request)
     {
         foreach ($this->requestHandlers as $handler) {
             if ($handler->supports($request)) {

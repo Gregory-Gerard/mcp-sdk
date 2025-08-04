@@ -15,10 +15,16 @@ use Symfony\AI\McpSdk\Capability\Prompt\PromptGet;
 
 final class PromptGetException extends \RuntimeException implements ExceptionInterface
 {
+    /**
+     * @readonly
+     */
+    public PromptGet $promptGet;
+
     public function __construct(
-        public readonly PromptGet $promptGet,
-        ?\Throwable $previous = null,
+        PromptGet $promptGet,
+        ?\Throwable $previous = null
     ) {
-        parent::__construct(\sprintf('Handling prompt "%s" failed with error: %s', $promptGet->name, $previous->getMessage()), previous: $previous);
+        $this->promptGet = $promptGet;
+        parent::__construct(\sprintf('Handling prompt "%s" failed with error: %s', $promptGet->name, $previous->getMessage()), 0, $previous);
     }
 }

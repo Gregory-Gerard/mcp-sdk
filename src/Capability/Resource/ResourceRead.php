@@ -11,11 +11,17 @@
 
 namespace Symfony\AI\McpSdk\Capability\Resource;
 
-final readonly class ResourceRead
+/**
+ * @readonly
+ */
+final class ResourceRead
 {
-    public function __construct(
-        public string $id,
-        public string $uri,
-    ) {
+    public string $id;
+    public string $uri;
+
+    public function __construct(string $id, string $uri)
+    {
+        $this->id = $id;
+        $this->uri = $uri;
     }
 }

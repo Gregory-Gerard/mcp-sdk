@@ -11,8 +11,17 @@
 
 namespace Symfony\AI\McpSdk\Message;
 
-final readonly class Error implements \JsonSerializable
+/**
+ * @readonly
+ */
+final class Error implements \JsonSerializable
 {
+    /**
+     * @var int|string
+     */
+    public $id;
+    public int $code;
+    public string $message;
     public const INVALID_REQUEST = -32600;
     public const METHOD_NOT_FOUND = -32601;
     public const INVALID_PARAMS = -32602;
@@ -20,34 +29,52 @@ final readonly class Error implements \JsonSerializable
     public const PARSE_ERROR = -32700;
     public const RESOURCE_NOT_FOUND = -32002;
 
-    public function __construct(
-        public string|int $id,
-        public int $code,
-        public string $message,
-    ) {
+    /**
+     * @param string|int $id
+     */
+    public function __construct($id, int $code, string $message)
+    {
+        $this->id = $id;
+        $this->code = $code;
+        $this->message = $message;
     }
 
-    public static function invalidRequest(string|int $id, string $message = 'Invalid Request'): self
+    /**
+     * @param string|int $id
+     */
+    public static function invalidRequest($id, string $message = 'Invalid Request'): self
     {
         return new self($id, self::INVALID_REQUEST, $message);
     }
 
-    public static function methodNotFound(string|int $id, string $message = 'Method not found'): self
+    /**
+     * @param string|int $id
+     */
+    public static function methodNotFound($id, string $message = 'Method not found'): self
     {
         return new self($id, self::METHOD_NOT_FOUND, $message);
     }
 
-    public static function invalidParams(string|int $id, string $message = 'Invalid params'): self
+    /**
+     * @param string|int $id
+     */
+    public static function invalidParams($id, string $message = 'Invalid params'): self
     {
         return new self($id, self::INVALID_PARAMS, $message);
     }
 
-    public static function internalError(string|int $id, string $message = 'Internal error'): self
+    /**
+     * @param string|int $id
+     */
+    public static function internalError($id, string $message = 'Internal error'): self
     {
         return new self($id, self::INTERNAL_ERROR, $message);
     }
 
-    public static function parseError(string|int $id, string $message = 'Parse error'): self
+    /**
+     * @param string|int $id
+     */
+    public static function parseError($id, string $message = 'Parse error'): self
     {
         return new self($id, self::PARSE_ERROR, $message);
     }
